@@ -42,5 +42,39 @@
                     android:text="Intel Core i5 2400"
                     android:layout_weight="1"/>
         </TableRow>
+
+        <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Motherboard : "
+                    android:layout_weight="1"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Asus H77 with USB3.0"
+                    android:layout_weight="1"/>
+        </TableRow>
+
+        <TableRow
+                android:id="@+id/tableRow4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="RAM : "
+                    android:layout_weight="1"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="4GB DDR3 1333MHz"
+                    android:layout_weight="1"/>
+        </TableRow>
     </TableLayout>
 </LinearLayout>
