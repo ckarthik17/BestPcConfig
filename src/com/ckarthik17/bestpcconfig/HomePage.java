@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebView;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,11 +15,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 public class HomePage extends Activity
 {
@@ -54,10 +55,17 @@ public class HomePage extends Activity
         RetrieveBlogContent retrieveBlogContent = new RetrieveBlogContent();
         AsyncTask<Void, Void, String> executionResult = retrieveBlogContent.execute();
         try {
-            Log.i(LOG_TAG, executionResult.get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            String responseString = executionResult.get();
+            Log.i(LOG_TAG, responseString);
+
+            JSONObject json = new JSONObject(responseString);
+            String htmlContent = (String) json.get("content");
+
+            WebView webView = (WebView) findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadData(htmlContent, "text/html", "UTF-8");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
