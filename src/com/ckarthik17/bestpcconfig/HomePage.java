@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.WebView;
+import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,6 +18,10 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,11 +67,43 @@ public class HomePage extends Activity
             JSONObject json = new JSONObject(responseString);
             String htmlContent = (String) json.get("content");
 
-            WebView webView = (WebView) findViewById(R.id.webView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadData(htmlContent, "text/html", "UTF-8");
+            Document blogContentDocument = Jsoup.parse(htmlContent);
+            Elements intelTable = blogContentDocument.select("#intelTable");
 
-        } catch (Exception e) {
+            TableLayout uiTableLayout =(TableLayout)findViewById(R.id.configTable);
+            Elements tableRows = intelTable.get(0).select("tr");
+
+            TableRow.LayoutParams textLayoutWeight1 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            TableRow.LayoutParams textLayoutWeight2 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 2);
+
+            for (Element tableRow : tableRows) {
+                TableRow uiTableRow = new TableRow(this);
+
+                Elements tableData = tableRow.select("td");
+
+                MyTextView typeTextView = new MyTextView(this);
+                typeTextView.setLayoutParams(textLayoutWeight1);
+                typeTextView.setText(tableData.get(0).text());
+                typeTextView.setPadding(5,2,5,2);
+
+                MyTextView detailTextView = new MyTextView(this);
+                detailTextView.setLayoutParams(textLayoutWeight2);
+                detailTextView.setText(tableData.get(1).text());
+                detailTextView.setPadding(5,2,5,2);
+
+                MyTextView priceTextView = new MyTextView(this);
+                priceTextView.setLayoutParams(textLayoutWeight1);
+                priceTextView.setText(tableData.get(2).text());
+                priceTextView.setPadding(5,2,5,2);
+
+                uiTableRow.addView(typeTextView);
+                uiTableRow.addView(detailTextView);
+                uiTableRow.addView(priceTextView);
+
+                uiTableLayout.addView(uiTableRow);
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
