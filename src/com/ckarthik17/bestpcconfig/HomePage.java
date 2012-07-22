@@ -16,50 +16,64 @@ public class HomePage extends TabActivity {
     public static String BLOGGER_API_KEY;
     public static final String LOG_TAG = "BEST PC CONFIG";
     public static final String BLOG_API_URL = "https://www.googleapis.com/blogger/v3/blogs/230842735819274721";
+    public static final int TAB_HEIGHT = 50;
+    public static final int HIGH_CONFIG_TAB_INDEX = 1;
+
+    private TabHost tabHost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        tabHost = getTabHost();
 
         try {
-            Resources resources = this.getResources();
-            AssetManager assetManager = resources.getAssets();
-
-            InputStream inputStream = assetManager.open("config.properties");
-            Properties properties = new Properties();
-            properties.load(inputStream);
-
-            BLOGGER_API_KEY = (String) properties.get(BLOGGER_API_KEY_PROPERTY);
+            initializeBloggerKey();
+            initializeTabs();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        TabHost tabHost = getTabHost();
+    }
 
-        TabHost.TabSpec mediumConfigTab = tabHost.newTabSpec("Medium Config");
-        mediumConfigTab.setIndicator("Medium Config");
-        Intent photosIntent = new Intent(this, MediumConfigActivity.class);
-        mediumConfigTab.setContent(photosIntent);
+    private void initializeBloggerKey() throws IOException {
+        Resources resources = this.getResources();
+        AssetManager assetManager = resources.getAssets();
 
-        TabHost.TabSpec highConfigTab = tabHost.newTabSpec("HighEnd Config");
-        highConfigTab.setIndicator("HighEnd Config");
-        Intent songsIntent = new Intent(this, HighConfigActivity.class);
-        highConfigTab.setContent(songsIntent);
+        InputStream inputStream = assetManager.open("config.properties");
+        Properties properties = new Properties();
+        properties.load(inputStream);
 
-        TabHost.TabSpec ultraConfigTab = tabHost.newTabSpec("Ultra Config");
-        ultraConfigTab.setIndicator("Ultra Config");
-        Intent videosIntent = new Intent(this, UltraConfigActivity.class);
-        ultraConfigTab.setContent(videosIntent);
+        BLOGGER_API_KEY = (String) properties.get(BLOGGER_API_KEY_PROPERTY);
+    }
 
-        tabHost.addTab(mediumConfigTab);
-        tabHost.addTab(highConfigTab);
-        tabHost.addTab(ultraConfigTab);
+    private void initializeTabs() {
+        TabHost.TabSpec mediumConfigTab = initializeTab("Medium Config", MediumConfigActivity.class);
+        TabHost.TabSpec highConfigTab = initializeTab("HighEnd Config", HighConfigActivity.class);
+        TabHost.TabSpec ultraConfigTab = initializeTab("Ultra Config", UltraConfigActivity.class);
 
-        tabHost.setCurrentTab(1);
+        addTabs(mediumConfigTab, highConfigTab, ultraConfigTab);
+        tabHost.setCurrentTab(HIGH_CONFIG_TAB_INDEX);
+        setTabHeight();
+    }
 
-        tabHost.getTabWidget().getChildAt(0).getLayoutParams().height =60;
-        tabHost.getTabWidget().getChildAt(1).getLayoutParams().height =60;
-        tabHost.getTabWidget().getChildAt(2).getLayoutParams().height =60;
+    private void addTabs(TabHost.TabSpec... tabs) {
+        for (TabHost.TabSpec tab : tabs) {
+            tabHost.addTab(tab);
+        }
+    }
+
+    private void setTabHeight() {
+        for (int i=0;  i < tabHost.getTabWidget().getTabCount(); i++) {
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height= TAB_HEIGHT;
+        }
+    }
+
+    private TabHost.TabSpec initializeTab(String tabName, Class tabClass) {
+        TabHost.TabSpec configTab = tabHost.newTabSpec(tabName);
+        configTab.setIndicator(tabName);
+        Intent intent = new Intent(this, tabClass);
+        configTab.setContent(intent);
+        return configTab;
     }
 }
