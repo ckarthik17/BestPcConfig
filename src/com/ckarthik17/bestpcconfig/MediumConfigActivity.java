@@ -11,11 +11,10 @@ public class MediumConfigActivity extends Activity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medium_config);
+        update();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void update() {
         try {
             RetrieveBlogContent retrieveBlogContent = new RetrieveBlogContent();
             String responseString = retrieveBlogContent.execute(MEDIUM_CONFIG_POST_ID).get();

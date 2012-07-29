@@ -2,6 +2,7 @@ package com.ckarthik17.bestpcconfig;
 
 import android.app.Activity;
 import android.os.Bundle;
+import org.jsoup.select.Elements;
 
 public class HighConfigActivity extends Activity
 {
@@ -10,19 +11,19 @@ public class HighConfigActivity extends Activity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_config);
+        update();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void update() {
         try {
             RetrieveBlogContent retrieveBlogContent = new RetrieveBlogContent();
             String responseString = retrieveBlogContent.execute(HIGH_CONFIG_POST_ID).get();
 
             BlogContent blogContent = new BlogContent(responseString);
-            ConfigTableLayout configTableLayout = new ConfigTableLayout(this, R.id.highConfigTable);
+            final Elements tableRows = blogContent.parseTable("#intelTable");
 
-            configTableLayout.updateLayout(blogContent.parseTable("#intelTable"));
+            ConfigTableLayout configTableLayout = new ConfigTableLayout(this, R.id.highConfigTable);
+            configTableLayout.updateLayout(tableRows);
         }
         catch (Exception e) {
             e.printStackTrace();

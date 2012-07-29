@@ -11,11 +11,10 @@ public class UltraConfigActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ultra_config);
+        update();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void update() {
         try {
             RetrieveBlogContent retrieveBlogContent = new RetrieveBlogContent();
             String responseString = retrieveBlogContent.execute(ULTRA_CONFIG_POST_ID).get();
