@@ -23,9 +23,17 @@ public class HomePage extends TabActivity implements OnClickListener {
     public static final String BLOG_API_URL = "https://www.googleapis.com/blogger/v3/blogs/230842735819274721";
     public static String BLOGGER_API_KEY;
 
-    public static final int TAB_HEIGHT = 50;
+    public static final String MEDIUM_CONFIG_POST_ID = "2196091438738422674";
+    public static final String HIGH_CONFIG_POST_ID = "1186418786118781314";
+    public static final String ULTRA_CONFIG_POST_ID = "6081886220470942147";
+
+    public static final String INTEL_TABLE = "#intelTable";
+    public static final String CONFIG_TABLE = "#configTable";
+
+    public static final int TAB_HEIGHT = 70;
     public static final int HIGH_CONFIG_TAB_INDEX = 1;
     private static Cache cache;
+    public static final String BLOG_POST = "BLOG_POST";
 
     private TabHost tabHost;
 
@@ -64,13 +72,17 @@ public class HomePage extends TabActivity implements OnClickListener {
     }
 
     private void initializeTabs() {
-        TabHost.TabSpec mediumConfigTab = initializeTab("Medium (35k)", MediumConfigActivity.class);
-        TabHost.TabSpec highConfigTab = initializeTab("HighEnd (60k)", HighConfigActivity.class);
-        TabHost.TabSpec ultraConfigTab = initializeTab("Ultra (1L)", UltraConfigActivity.class);
+        BlogPost mediumBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, INTEL_TABLE, MEDIUM_CONFIG_POST_ID);
+        BlogPost highBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, INTEL_TABLE, HIGH_CONFIG_POST_ID);
+        BlogPost ultraBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, CONFIG_TABLE, ULTRA_CONFIG_POST_ID);
+
+        TabHost.TabSpec mediumConfigTab = initializeTab("Medium (35k)", ConfigActivity.class, mediumBlogPost);
+        TabHost.TabSpec highConfigTab = initializeTab("HighEnd (60k)", ConfigActivity.class, highBlogPost);
+        TabHost.TabSpec ultraConfigTab = initializeTab("Ultra (1L)", ConfigActivity.class, ultraBlogPost);
 
         addTabs(mediumConfigTab, highConfigTab, ultraConfigTab);
         tabHost.setCurrentTab(HIGH_CONFIG_TAB_INDEX);
-        //setTabHeight();
+        setTabHeight();
     }
 
     private void addTabs(TabHost.TabSpec... tabs) {
@@ -85,11 +97,13 @@ public class HomePage extends TabActivity implements OnClickListener {
         }
     }
 
-    private TabHost.TabSpec initializeTab(String tabName, Class tabClass) {
+    private TabHost.TabSpec initializeTab(String tabName, Class tabClass, BlogPost blogPost) {
         TabHost.TabSpec configTab = tabHost.newTabSpec(tabName);
         configTab.setIndicator(tabName);
         Intent intent = new Intent(this, tabClass);
+        intent.putExtra(BLOG_POST, blogPost);
         configTab.setContent(intent);
+
         return configTab;
     }
 

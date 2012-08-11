@@ -15,9 +15,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="MediumConfigActivity" />
-        <activity android:name="HighConfigActivity" />
-        <activity android:name="UltraConfigActivity" />
+        <activity android:name="ConfigActivity" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

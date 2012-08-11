@@ -28,7 +28,7 @@ public class MyTextView extends TextView {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(3);
+        paint.setStrokeWidth(1);
         getLocalVisibleRect(rect);
         canvas.drawRect(rect, paint);
     }
