@@ -11,8 +11,8 @@ public class ConfigTableLayout {
     private final Activity activity;
     private TableLayout uiTableLayout;
 
-    private TableRow.LayoutParams textLayoutWeight1 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-    private TableRow.LayoutParams textLayoutWeight2 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 2);
+    private TableRow.LayoutParams textLayoutWeight1 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.FILL_PARENT, 1);
+    private TableRow.LayoutParams textLayoutWeight2 = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.FILL_PARENT, 2);
 
     public ConfigTableLayout(Activity activity, int configTableId) {
         this.activity = activity;

@@ -1,17 +1,23 @@
 package com.ckarthik17.bestpcconfig;
 
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TabHost;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class HomePage extends TabActivity {
+import static android.view.View.OnClickListener;
+
+public class HomePage extends TabActivity implements OnClickListener {
     public static final String BLOGGER_API_KEY_PROPERTY = "BLOGGER_API_KEY";
     public static final String APP_TAG = "CK_BEST_PC_CONFIG";
     public static final String BLOG_API_URL = "https://www.googleapis.com/blogger/v3/blogs/230842735819274721";
@@ -33,6 +39,9 @@ public class HomePage extends TabActivity {
             initializeCache();
             initializeBloggerKey();
             initializeTabs();
+
+            ImageButton refreshButton = (ImageButton)findViewById(R.id.refreshButton);
+            refreshButton.setOnClickListener(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -55,13 +64,13 @@ public class HomePage extends TabActivity {
     }
 
     private void initializeTabs() {
-        TabHost.TabSpec mediumConfigTab = initializeTab("Medium Config", MediumConfigActivity.class);
-        TabHost.TabSpec highConfigTab = initializeTab("HighEnd Config", HighConfigActivity.class);
-        TabHost.TabSpec ultraConfigTab = initializeTab("Ultra Config", UltraConfigActivity.class);
+        TabHost.TabSpec mediumConfigTab = initializeTab("Medium (35k)", MediumConfigActivity.class);
+        TabHost.TabSpec highConfigTab = initializeTab("HighEnd (60k)", HighConfigActivity.class);
+        TabHost.TabSpec ultraConfigTab = initializeTab("Ultra (1L)", UltraConfigActivity.class);
 
         addTabs(mediumConfigTab, highConfigTab, ultraConfigTab);
         tabHost.setCurrentTab(HIGH_CONFIG_TAB_INDEX);
-        setTabHeight();
+        //setTabHeight();
     }
 
     private void addTabs(TabHost.TabSpec... tabs) {
@@ -86,5 +95,18 @@ public class HomePage extends TabActivity {
 
     public static Cache getCache() {
         return cache;
+    }
+
+    @Override
+    public void onClick(View view) {
+        new AlertDialog.Builder(this)
+                .setMessage("Refreshing...")
+                .setTitle("Update")
+                .setCancelable(true)
+                .setNeutralButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton){}
+                        })
+                .show();
     }
 }
