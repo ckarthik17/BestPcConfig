@@ -14,25 +14,9 @@ import static com.ckarthik17.bestpcconfig.HomePage.BLOGGER_API_KEY;
 import static com.ckarthik17.bestpcconfig.HomePage.BLOG_API_URL;
 
 public class RetrieveBlogContent extends AsyncTask<String, Void, String> {
-    private Cache cache;
-
-    public RetrieveBlogContent() {
-        cache = HomePage.getCache();
-    }
-
     @Override
     protected String doInBackground(String... strings) {
-        String postId = strings[0];
-        String result;
-
-        if(cache.contains(postId)) {
-            result = cache.getValue(postId);
-        }
-        else {
-            result = fetchPost(postId);
-        }
-
-        return result;
+        return fetchPost(strings[0]);
     }
 
     private String fetchPost(String postId) {
@@ -49,7 +33,6 @@ public class RetrieveBlogContent extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
 
-        cache.setValue(postId, responseString);
         return responseString;
     }
 }

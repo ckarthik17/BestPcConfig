@@ -12,6 +12,11 @@ public class ConfigActivity extends Activity {
         super.onCreate(savedInstanceState);
         initProperties(getIntent());
         setContentView(post.getLayoutId());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         update();
     }
 
@@ -21,12 +26,8 @@ public class ConfigActivity extends Activity {
 
     public void update() {
         try {
-            RetrieveBlogContent retrieveBlogContent = new RetrieveBlogContent();
-            String responseString = retrieveBlogContent.execute(post.getPostId()).get();
-
-            BlogContent blogContent = new BlogContent(responseString);
             ConfigTableLayout configTableLayout = new ConfigTableLayout(this, post.getTableId());
-
+            BlogContent blogContent = new BlogContent(HomePage.getPostCache().getPost(post));
             configTableLayout.updateLayout(blogContent.parseTable(post.getTableName()));
         }
         catch (Exception e) {

@@ -7,28 +7,10 @@
                  android:layout_height="fill_parent"
                  android:layout_width="fill_parent">
 
-        <TableRow
-                android:id="@+id/refreshRow"
-                android:layout_width="fill_parent">
-
-            <TextView android:layout_width="0dp"
-                      android:layout_height="wrap_content"
-                      android:text="Synced on : "
-                      android:layout_weight="4"/>
-
-            <ImageButton
-                    android:id="@+id/refreshButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/refresh_icon"
-                    android:clickable="true"
-                    android:onClick=""
-                    android:background="@null"/>
-        </TableRow>
-
         <TableRow android:id="@+id/configRow"
-                  android:layout_width="fill_parent">
-
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="7">
             <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
                      android:id="@android:id/tabhost"
                      android:layout_width="0dp"
@@ -48,6 +30,28 @@
                             android:layout_height="fill_parent"/>
                 </LinearLayout>
             </TabHost>
+        </TableRow>
+
+        <TableRow
+                android:id="@+id/refreshRow"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:text="Synced on : "
+                      android:id="@+id/syncedOn"
+                      android:layout_margin="10dp"
+                      android:layout_weight="4"/>
+
+            <ImageButton
+                    android:id="@+id/refreshButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/refresh_icon"
+                    android:clickable="true"
+                    android:background="@null"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

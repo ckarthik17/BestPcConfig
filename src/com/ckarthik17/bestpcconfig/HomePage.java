@@ -1,8 +1,6 @@
 package com.ckarthik17.bestpcconfig;
 
-import android.app.AlertDialog;
 import android.app.TabActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -10,9 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static android.view.View.OnClickListener;
@@ -32,10 +33,12 @@ public class HomePage extends TabActivity implements OnClickListener {
 
     public static final int TAB_HEIGHT = 70;
     public static final int HIGH_CONFIG_TAB_INDEX = 1;
-    private static Cache cache;
+    private static PostCache postCache;
     public static final String BLOG_POST = "BLOG_POST";
+    public static final String SYNCED_DATE_TIME = "SYNCED_DATE_TIME";
 
     private TabHost tabHost;
+    private List<BlogPost> blogPosts = new ArrayList<BlogPost>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class HomePage extends TabActivity implements OnClickListener {
             initializeCache();
             initializeBloggerKey();
             initializeTabs();
+            refresh();
 
             ImageButton refreshButton = (ImageButton)findViewById(R.id.refreshButton);
             refreshButton.setOnClickListener(this);
@@ -57,7 +61,7 @@ public class HomePage extends TabActivity implements OnClickListener {
     }
 
     private void initializeCache() {
-        cache = new Cache(this);
+        postCache = new PostCache(this);
     }
 
     private void initializeBloggerKey() throws IOException {
@@ -75,6 +79,9 @@ public class HomePage extends TabActivity implements OnClickListener {
         BlogPost mediumBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, INTEL_TABLE, MEDIUM_CONFIG_POST_ID);
         BlogPost highBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, INTEL_TABLE, HIGH_CONFIG_POST_ID);
         BlogPost ultraBlogPost = new BlogPost(R.layout.config_layout, R.id.configTable, CONFIG_TABLE, ULTRA_CONFIG_POST_ID);
+        blogPosts.add(mediumBlogPost);
+        blogPosts.add(highBlogPost);
+        blogPosts.add(ultraBlogPost);
 
         TabHost.TabSpec mediumConfigTab = initializeTab("Medium (35k)", ConfigActivity.class, mediumBlogPost);
         TabHost.TabSpec highConfigTab = initializeTab("HighEnd (60k)", ConfigActivity.class, highBlogPost);
@@ -107,20 +114,20 @@ public class HomePage extends TabActivity implements OnClickListener {
         return configTab;
     }
 
-    public static Cache getCache() {
-        return cache;
+    public static PostCache getPostCache() {
+        return postCache;
     }
 
     @Override
     public void onClick(View view) {
-        new AlertDialog.Builder(this)
-                .setMessage("Refreshing...")
-                .setTitle("Update")
-                .setCancelable(true)
-                .setNeutralButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton){}
-                        })
-                .show();
+        refresh();
+    }
+
+    private void refresh() {
+        for (BlogPost blogPost : blogPosts) {
+            postCache.update(blogPost.getPostId());
+        }
+        TextView syncedOnTextView = (TextView) findViewById(R.id.syncedOn);
+        syncedOnTextView.setText("Synced on : " + postCache.getValue(SYNCED_DATE_TIME));
     }
 }
